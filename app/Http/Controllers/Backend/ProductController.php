@@ -43,6 +43,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         // validasi request dari form 
         $request->validate([
             'title' => 'required',
@@ -64,10 +65,18 @@ class ProductController extends Controller
 
         # membuat variabel baru untuk penamaan file image kita menggunakan time() agar unique tidak sama dengan gambar lain
         $imageName = time() . '.' . $request->image->extension();
+        //dd($imageName);
 
         # gunakan query untuk update data baru kedalam database dengan memanggil model product
 
         # awal query
+        Product::create([
+            'title' => $request->title,
+            'harga' => $request->harga,
+            'status' => $request->status,
+            'desc' => $request->desc,
+            'image' => $imageName
+        ]);
 
         # akhir query
 
@@ -152,6 +161,13 @@ class ProductController extends Controller
             # gunakan query untuk update data baru kedalam database dengan memanggil model product
 
             # awal query
+            $data->update([
+            'title' => $request->title,
+            'harga' => $request->harga,
+            'status' => $request->status,
+            'desc' => $request->desc,
+            'image' => $imageName
+            ]);
 
             # akhir query
 
@@ -163,6 +179,12 @@ class ProductController extends Controller
             # jika tidak ada request image maka memanggil query update dengan model
 
             # awal query
+            $data->update([
+                'title' => $request->title,
+                'harga' => $request->harga,
+                'status' => $request->status,
+                'desc' => $request->desc,
+                ]);
 
             # akhir query
         }
@@ -189,11 +211,12 @@ class ProductController extends Controller
         }
 
         # gunakan fitur unlink untuk menghapus gambar pada folder penyimpanan kita sesuai dengan nama file pada database
-        unlink(public_path('img/' . $data->image));
+        //unlink(public_path('img/' . $data->image));
 
         # gunakan query delete orm untuk menghapus data pada tabel
 
         # awal query
+        $data->delete();
 
         # akhir query
 
